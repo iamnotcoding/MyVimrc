@@ -50,6 +50,10 @@ Plug 'mfussenegger/nvim-dap'
 Plug 'nvim-neotest/nvim-nio'
 Plug 'rcarriga/nvim-dap-ui'
 
+Plug 'nvim-treesitter/nvim-treesitter'
+
+Plug 'mfussenegger/nvim-dap-python'
+
 call plug#end()
 
 lua << EOF
@@ -264,3 +268,37 @@ nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 " end telescope ===============================================
+
+" dap config start ==========================================
+lua << EOF
+local dap, dapui = require("dap"), require("dapui")
+dapui.setup()
+
+dap.listeners.before.attach.dapui_config = function()
+  dapui.open()
+end
+dap.listeners.before.launch.dapui_config = function()
+  dapui.open()
+end
+dap.listeners.before.event_terminated.dapui_config = function()
+  dapui.close()
+end
+dap.listeners.before.event_exited.dapui_config = function()
+  dapui.close()
+end
+
+vim.keymap.set("n", "<Leader>dt", dap.toggle_breakpoint, {})
+vim.keymap.set("n", "<Leader>dc", dap.continue, {})
+vim.keymap.set('n', '<F5>', function() require('dap').continue() end)
+vim.keymap.set('n', '<F10>', function() require('dap').step_over() end)
+vim.keymap.set('n', '<F11>', function() require('dap').step_into() end)
+vim.keymap.set('n', '<F12>', function() require('dap').step_out() end)
+
+EOF
+
+lua require("dap-python").setup("python")
+
+nnoremap <silent> <leader>dn :lua require('dap-python').test_method()<CR>
+nnoremap <silent> <leader>df :lua require('dap-python').test_class()<CR>
+vnoremap <silent> <leader>ds <ESC>:lua require('dap-python').debug_selection()<CR>
+"dap config end ================================================
