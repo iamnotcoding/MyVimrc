@@ -39,9 +39,24 @@ Plug 'tpope/vim-surround'
 Plug 'easymotion/vim-easymotion'
 
 Plug 'nvim-lua/plenary.nvim'
+
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.8' }
 
+"Plug 'Civitasv/cmake-tools.nvim'
+
+Plug 'stevearc/overseer.nvim'
+
+Plug 'mfussenegger/nvim-dap'
+Plug 'nvim-neotest/nvim-nio'
+Plug 'rcarriga/nvim-dap-ui'
+
 call plug#end()
+
+lua << EOF
+require("overseer").setup({
+	  templates = { "builtin" },
+})
+EOF
 
 let g:indent_guides_enable_on_vim_startup = 1
 
